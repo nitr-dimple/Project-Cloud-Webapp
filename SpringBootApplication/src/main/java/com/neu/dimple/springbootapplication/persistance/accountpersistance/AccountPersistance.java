@@ -43,7 +43,6 @@ public class AccountPersistance {
     private String username;
 
     @NotNull(message = "Password shouldn't be null")
-    @Size(min = 8, max = 16, message = "Password should have minimum 8 characters and maximum 16 character")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name="password", nullable = false)
     private String password;
