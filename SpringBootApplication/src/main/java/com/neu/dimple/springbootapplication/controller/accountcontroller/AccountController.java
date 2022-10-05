@@ -59,7 +59,6 @@ public class AccountController{
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
-//        logger.log(Level.INFO, "Username: " + username + " password: " + password);
         return new ResponseEntity(accountDetails, HttpStatus.OK);
     }
 
