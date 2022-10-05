@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -23,7 +25,7 @@ import java.util.logging.Logger;
  * @author Dimpleben Kanjibhai Patel
  */
 
-@Component
+@Component @Validated
 @RestController
 @RequestMapping("/v1/account")
 public class AccountController{
@@ -32,6 +34,7 @@ public class AccountController{
     private final AccountRepository accountRepository;
 
     private static final Logger logger = Logger.getLogger(AccountController.class.getName());
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public AccountController(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -41,17 +44,16 @@ public class AccountController{
     public ResponseEntity<AccountPersistance> getAllUserAccount(@PathVariable(value = "accountId") UUID id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         String username=pair.split(":")[0];
-        String password=pair.split(":")[1];
+        String password= passwordEncoder.encode(pair.split(":")[1]);
         AccountPersistance accountDetails = accountRepository.findById(id);
         JSONObject json = new JSONObject();
-
 
         if(accountDetails == null){
             json.put("error", "User ID not valid");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
-        if(!accountDetails.getPassword().equals(password) || !accountDetails.getUsername().equals(username))
+        if(!BCrypt.checkpw(password, accountDetails.getPassword()) || !accountDetails.getUsername().equals(username))
         {
             json.put("error", "User is not Authorized");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
@@ -62,21 +64,22 @@ public class AccountController{
     }
 
     @PostMapping("")
-    public AccountPersistance createAccount(@Valid @RequestBody AccountPersistance account){
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    public ResponseEntity createAccount(@Valid @RequestBody AccountPersistance account){
         String encodedPassword = passwordEncoder.encode(account.getPassword());
         account.setPassword(encodedPassword);
         AccountPersistance savedAccount = accountRepository.save(account);
-        return savedAccount;
+        return new ResponseEntity(savedAccount, HttpStatus.OK);
     }
 
     @PutMapping("/{accountId}")
     public ResponseEntity<AccountPersistance> updateAccount(@PathVariable(value = "accountId") UUID id, @RequestBody AccountPersistance account, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         String username=pair.split(":")[0];
-        String password=pair.split(":")[1];
+        String password= pair.split(":")[1];
         AccountPersistance accountDetails = accountRepository.findById(id);
         JSONObject json = new JSONObject();
+        password = passwordEncoder.encode(password);
+        logger.log(Level.INFO, "encrypted password: " + password);
 
         if(accountDetails == null){
             json.put("error", "User ID not valid");
@@ -87,6 +90,11 @@ public class AccountController{
         {
             json.put("error", "User is not Authorized");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
+        }
+
+        if( account.getUsername() != null){
+            json.put("error", "You can not update username");
+            return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if( account.getFirstname() != null && !account.getFirstname().isEmpty())

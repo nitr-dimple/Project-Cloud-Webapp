@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
         validatedBy = { ReadOnlyValdiator.class }
 )
 public @interface ReadOnly {
-    String message() default "Id will be generated automatically.";
+    String message() default "You are not allowed to pass ID. Id will be generated automatically.";
 
     Class<?>[] groups() default {};
 
