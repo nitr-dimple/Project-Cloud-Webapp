@@ -43,8 +43,9 @@ public class AccountController{
 
     @GetMapping("/{accountId}")
     public ResponseEntity<AccountPersistance> getAllUserAccount(@PathVariable(value = "accountId") UUID id, @RequestHeader Map<String, String> headers){
-        JSONObject json = new JSONObject();
+        logger.log(Level.INFO, "Reached: Account Get Call");
 
+        JSONObject json = new JSONObject();
         String authorization = null;
 
         if(headers.containsKey("authorization"))
@@ -91,6 +92,7 @@ public class AccountController{
 
     @PutMapping("/{accountId}")
     public ResponseEntity<AccountPersistance> updateAccount(@PathVariable(value = "accountId") UUID id, @RequestBody AccountPersistance account, @RequestHeader Map<String, String> headers){
+        logger.log(Level.INFO, "Reached: Account Put call");
 
         JSONObject json = new JSONObject();
         String authorization = null;
