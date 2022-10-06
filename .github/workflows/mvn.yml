@@ -1,7 +1,12 @@
 name: Maven CI/CD
 
-on: 
- - pull_request
+on:
+  #Manually trigger workflow runs
+  workflow_dispatch:
+  #Trigger the workflow on push from the main branch
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build_and_test:
