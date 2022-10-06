@@ -23,7 +23,7 @@ jobs:
         java-version: 11
 
     - name: Maven build
-      run: cd SpringBootApplication && ./mvnw clean install
+      run: cd SpringBootApplication && chmod -R 777 mvnw && ./mvnw clean install
 
 
 
