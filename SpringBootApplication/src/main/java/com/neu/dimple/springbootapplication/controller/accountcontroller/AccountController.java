@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,19 +42,22 @@ public class AccountController{
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<AccountPersistance> getAllUserAccount(@PathVariable(value = "accountId") UUID id, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String authorization){
-
-        logger.log(Level.INFO, "hiiiiiiiiiiiiiiiiiii");
+    public ResponseEntity<AccountPersistance> getAllUserAccount(@PathVariable(value = "accountId") UUID id, @RequestHeader Map<String, String> headers){
         JSONObject json = new JSONObject();
+
+        String authorization = null;
+
+        if(headers.containsKey("authorization"))
+            authorization = headers.get("authorization");
+        else{
+            json.put("error", "Missing Authorization Header ");
+            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
+        }
+
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         String username=pair.split(":")[0];
         String password= pair.split(":")[1];
         AccountPersistance accountDetails = accountRepository.findById(id);
-
-        if(authorization == null){
-            json.put("error", "Missing Authorization Header ");
-            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
-        }
 
         if(accountDetails == null){
             json.put("error", "User ID not valid");
@@ -78,13 +82,22 @@ public class AccountController{
     }
 
     @PutMapping("/{accountId}")
-    public ResponseEntity<AccountPersistance> updateAccount(@PathVariable(value = "accountId") UUID id, @RequestBody AccountPersistance account, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+    public ResponseEntity<AccountPersistance> updateAccount(@PathVariable(value = "accountId") UUID id, @RequestBody AccountPersistance account, @RequestHeader Map<String, String> headers){
+
+        JSONObject json = new JSONObject();
+        String authorization = null;
+
+        if(headers.containsKey("authorization"))
+            authorization = headers.get("authorization");
+        else{
+            json.put("error", "Missing Authorization Header ");
+            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
+        }
+
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         String username=pair.split(":")[0];
         String password= pair.split(":")[1];
         AccountPersistance accountDetails = accountRepository.findById(id);
-        JSONObject json = new JSONObject();
-        logger.log(Level.INFO, "encrypted password: " + password);
 
         if(authorization == null){
             json.put("error", "Missing Authorization Header ");
@@ -104,6 +117,21 @@ public class AccountController{
 
         if( account.getUsername() != null){
             json.put("error", "You can not update username");
+            return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
+        }
+
+        if(account.getId() != null){
+            json.put("error", "Id can not be updated");
+            return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
+        }
+
+        if(account.getAccount_created() != null){
+            json.put("error", "Can not set account create time");
+            return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
+        }
+
+        if(account.getAccount_updated() != null){
+            json.put("error", "Can not set account update time");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
