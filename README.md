@@ -24,3 +24,14 @@
    ```
    http://localhost:8080/healthz
    ```
+
+### APIs
+
+     post api
+     http://localhost:8080/v1/account
+
+     get api
+     http://localhost:8080/v1/account/{accountid}
+
+     put api
+     http://localhost:8080/v1/account/{accountid}
