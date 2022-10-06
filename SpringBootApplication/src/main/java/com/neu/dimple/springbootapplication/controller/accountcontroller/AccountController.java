@@ -41,32 +41,38 @@ public class AccountController{
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<AccountPersistance> getAllUserAccount(@PathVariable(value = "accountId") UUID id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+    public ResponseEntity<AccountPersistance> getAllUserAccount(@PathVariable(value = "accountId") UUID id, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String authorization){
+
+        logger.log(Level.INFO, "hiiiiiiiiiiiiiiiiiii");
+        JSONObject json = new JSONObject();
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         String username=pair.split(":")[0];
-        String password= passwordEncoder.encode(pair.split(":")[1]);
+        String password= pair.split(":")[1];
         AccountPersistance accountDetails = accountRepository.findById(id);
-        JSONObject json = new JSONObject();
+
+        if(authorization == null){
+            json.put("error", "Missing Authorization Header ");
+            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
+        }
 
         if(accountDetails == null){
             json.put("error", "User ID not valid");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
-        if(!BCrypt.checkpw(password, accountDetails.getPassword()) || !accountDetails.getUsername().equals(username))
-        {
+        if(!BCrypt.checkpw(password, accountDetails.getPassword()) || !accountDetails.getUsername().equals(username)) {
             json.put("error", "User is not Authorized");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
-//        logger.log(Level.INFO, "Username: " + username + " password: " + password);
         return new ResponseEntity(accountDetails, HttpStatus.OK);
     }
 
     @PostMapping("")
     public ResponseEntity createAccount(@Valid @RequestBody AccountPersistance account){
-        String encodedPassword = passwordEncoder.encode(account.getPassword());
-        account.setPassword(encodedPassword);
+
+        String password = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt(10));
+        account.setPassword(password);
         AccountPersistance savedAccount = accountRepository.save(account);
         return new ResponseEntity(savedAccount, HttpStatus.OK);
     }
@@ -78,15 +84,19 @@ public class AccountController{
         String password= pair.split(":")[1];
         AccountPersistance accountDetails = accountRepository.findById(id);
         JSONObject json = new JSONObject();
-        password = passwordEncoder.encode(password);
         logger.log(Level.INFO, "encrypted password: " + password);
+
+        if(authorization == null){
+            json.put("error", "Missing Authorization Header ");
+            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
+        }
 
         if(accountDetails == null){
             json.put("error", "User ID not valid");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
-        if(!accountDetails.getPassword().equals(password) || !accountDetails.getUsername().equals(username))
+        if(!BCrypt.checkpw(password, accountDetails.getPassword())  || !accountDetails.getUsername().equals(username))
         {
             json.put("error", "User is not Authorized");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
@@ -102,7 +112,7 @@ public class AccountController{
         if( account.getLastname() != null && !account.getLastname().isEmpty())
             accountDetails.setLastname(account.getLastname());
         if( account.getPassword() != null && !account.getPassword().isEmpty())
-            accountDetails.setPassword(account.getPassword());
+            accountDetails.setPassword(BCrypt.hashpw(account.getPassword(), BCrypt.gensalt(10)));
         AccountPersistance updatedAccountDetails = accountRepository.save(accountDetails);
         return new ResponseEntity(updatedAccountDetails, HttpStatus.OK);
     }
