@@ -53,7 +53,7 @@ public class AccountController{
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
-        if(!BCrypt.checkpw(password, accountDetails.getPassword()) || !accountDetails.getUsername().equals(username))
+        if(!accountDetails.getPassword().equals(password) || !accountDetails.getUsername().equals(username))
         {
             json.put("error", "User is not Authorized");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
