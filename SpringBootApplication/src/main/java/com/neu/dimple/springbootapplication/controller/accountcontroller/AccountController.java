@@ -65,6 +65,11 @@ public class AccountController{
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
+        if(!accountDetails.getUsername().equals(username)){
+            json.put("error", "You are not authorized to updated");
+            return new ResponseEntity(json, HttpStatus.FORBIDDEN);
+        }
+
         if(!BCrypt.checkpw(password, accountDetails.getPassword()) || !accountDetails.getUsername().equals(username)) {
             json.put("error", "User is not Authorized");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
@@ -119,6 +124,11 @@ public class AccountController{
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
+        if(!accountDetails.getUsername().equals(username)){
+            json.put("error", "You are not authorized to updated");
+            return new ResponseEntity(json, HttpStatus.FORBIDDEN);
+        }
+
         if(!BCrypt.checkpw(password, accountDetails.getPassword())  || !accountDetails.getUsername().equals(username))
         {
             json.put("error", "User is not Authorized");
@@ -142,6 +152,11 @@ public class AccountController{
 
         if(account.getAccount_updated() != null){
             json.put("error", "Can not set account update time");
+            return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
+        }
+
+        if(account.getPassword() != null && account.getPassword().isEmpty()){
+            json.put("error", "Password can not be empty");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
