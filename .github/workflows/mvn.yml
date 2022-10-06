@@ -23,7 +23,7 @@ jobs:
         java-version: 11
 
     - name: Maven build
-      run: ls -la && pwd
+      run: cd SpringBootApplication && mvn -B package pom.xml
 
 
 
