@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
     - uses: actions/checkout@v2
     
     - name: Set up JDK 11
@@ -21,5 +22,23 @@ jobs:
       with:
         java-version: 11
 
-    - name: Build project with Maven
-      run: mvn -B package --file pom.xml
+    # - name: Maven build
+    #   run: cd SpringBootApplication && mvn clean install
+
+    - name: Cache Maven packages
+      #This action allows caching dependencies and build outputs to improve workflow execution time.
+      uses: actions/cache@v1
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    #Build maven
+    - name: Build with Maven
+      run: cd SpringBootApplication && mvn clean install
+    # #Run Tests
+    # - name: Run Tests
+    #   run: mvn -X test
+
+
+
+    
