@@ -75,6 +75,14 @@ public class AccountController{
     @PostMapping("")
     public ResponseEntity createAccount(@Valid @RequestBody AccountPersistance account){
 
+        logger.log(Level.INFO, "Reached: Account Create");
+        JSONObject json = new JSONObject();
+
+        AccountPersistance accountDetails = accountRepository.findByUsername(account.getUsername());
+        if(accountDetails != null){
+            json.put("error", "Username already exists" );
+            return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
+        }
         String password = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt(10));
         account.setPassword(password);
         AccountPersistance savedAccount = accountRepository.save(account);

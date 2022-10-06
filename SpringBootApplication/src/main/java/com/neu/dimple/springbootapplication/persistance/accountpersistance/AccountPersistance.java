@@ -38,7 +38,6 @@ public class AccountPersistance {
     @Email
     @NotNull(message = "Username shouldn't be null")
     @NotEmpty(message = "Username shouldn't be empty")
-    @UniqueEmail
     @Column(name = "username", nullable = false)
     private String username;
 
@@ -67,6 +66,13 @@ public class AccountPersistance {
         this.password = password;
         this.account_created = account_created;
         this.account_updated = account_updated;
+    }
+
+    public AccountPersistance(String firstname, String lastname, String username, String password) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.username = username;
+        this.password = password;
     }
 
     public UUID getId() {
