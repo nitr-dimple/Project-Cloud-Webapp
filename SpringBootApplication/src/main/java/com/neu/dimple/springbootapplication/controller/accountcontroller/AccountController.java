@@ -56,6 +56,11 @@ public class AccountController{
         }
 
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
+
+        if(pair.split(":").length < 2){
+            json.put("error", "Username and Password can not be empty");
+            return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
+        }
         String username=pair.split(":")[0];
         String password= pair.split(":")[1];
         AccountPersistance accountDetails = accountRepository.findById(id);
@@ -66,7 +71,7 @@ public class AccountController{
         }
 
         if(!accountDetails.getUsername().equals(username)){
-            json.put("error", "You are not authorized to updated");
+            json.put("error", "You are not authorized to retrieve data");
             return new ResponseEntity(json, HttpStatus.FORBIDDEN);
         }
 
@@ -110,6 +115,10 @@ public class AccountController{
         }
 
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
+        if(pair.split(":").length < 2){
+            json.put("error", "Username and Password can not be empty");
+            return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
+        }
         String username=pair.split(":")[0];
         String password= pair.split(":")[1];
         AccountPersistance accountDetails = accountRepository.findById(id);
