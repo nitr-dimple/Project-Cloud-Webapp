@@ -11,6 +11,6 @@ sudo apt install mysql-server -y
 sudo variable1=$(echo "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'; exit" | sudo mysql)
 pwd
 ls -la
-mv /tmp/webservice.service /etc/systemd/system/webservice.service
+sudo mv /tmp/webservice.service /etc/systemd/system/webservice.service
 sudo systemctl enable webservice.service
 sudo systemctl start webservice.service
