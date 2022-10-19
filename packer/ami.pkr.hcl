@@ -78,7 +78,7 @@ build {
   }
 
   provisioner "file" {
-    source = "pakcer/webservice.service"
+    source      = "pakcer/webservice.service"
     destination = "/tmp/webservice.service"
   }
 
