@@ -66,6 +66,7 @@ public class AccountController{
         AccountPersistance accountDetails = accountRepository.findById(id);
 
         if(accountDetails == null){
+            System.out.println(accountDetails);
             json.put("error", "User ID not valid");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }

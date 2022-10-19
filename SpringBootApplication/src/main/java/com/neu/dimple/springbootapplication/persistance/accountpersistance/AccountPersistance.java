@@ -5,6 +5,7 @@ import com.neu.dimple.springbootapplication.annotation.DateReadOnly;
 import com.neu.dimple.springbootapplication.annotation.ReadOnly;
 import com.neu.dimple.springbootapplication.annotation.UniqueEmail;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class AccountPersistance {
     @ReadOnly
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID id;
 
     @NotNull(message = "First name shouldn't be null")
