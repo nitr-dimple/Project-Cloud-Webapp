@@ -2,7 +2,7 @@ name: AMI build
 
 on:
   # Trigger the workflow action on push
-  push:
+  pull_request:
     branches: [main]
 
   # Allows you to run this workflow mannually 
