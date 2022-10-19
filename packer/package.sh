@@ -8,10 +8,13 @@ sudo apt-get clean
 sudo apt install openjdk-11-jre-headless -y
 sudo apt install maven -y
 sudo apt install mysql-server -y
+sudo apt install tomcat9 tomcat9-admin -y
+sudo ufw allow from any to any port 8080 proto tcp
 sudo variable1=$(echo "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'; exit" | sudo mysql)
 pwd
 ls -la
 sudo mv /tmp/SpringBootApplication-0.0.1-SNAPSHOT.war ~/SpringBootApplication-0.0.1-SNAPSHOT.war
-sudo mv /tmp/webservice.service /etc/systemd/system/webservice.service
-sudo systemctl enable webservice.service
-sudo systemctl start webservice.service
+sudo cp ~/SpringBootApplication-0.0.1-SNAPSHOT.war /var/lib/tomcat9
+# sudo mv /tmp/webservice.service /etc/systemd/system/webservice.service
+# sudo systemctl enable webservice.service
+# sudo systemctl start webservice.service

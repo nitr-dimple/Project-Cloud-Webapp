@@ -83,10 +83,10 @@ build {
     destination = "/tmp/SpringBootApplication-0.0.1-SNAPSHOT.war"
   }
 
-  provisioner "file" {
-    source      = "webservice.service"
-    destination = "/tmp/webservice.service"
-  }
+  // provisioner "file" {
+  //   source      = "webservice.service"
+  //   destination = "/tmp/webservice.service"
+  // }
 
   provisioner "shell" {
     environment_vars = [
