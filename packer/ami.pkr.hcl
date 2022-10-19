@@ -80,7 +80,7 @@ build {
 
   provisioner "file" {
     source      = "../SpringBootApplication-0.0.1-SNAPSHOT.jar"
-    destination = "/tmp/SpringBootApplication-0.0.1-SNAPSHOT.jar"
+    destination = "/bin/SpringBootApplication-0.0.1-SNAPSHOT.jar"
   }
 
   provisioner "file" {
