@@ -1,0 +1,21 @@
+name: AMI build
+
+on:
+  # Trigger the workflow action on push
+  pull_request:
+    branches: [main]
+
+  # Allows you to run this workflow mannually 
+  workflow_dispatch:
+
+jobs:
+  jarcreation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Create webservice folder
+        run: rsync -arv --exclude='.git/' --exclude='.github/' --exclude='.gitignore' . ./webservice
+
+      - name: switch to webservice folder
+        run: ls -la
+
