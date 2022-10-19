@@ -1,0 +1,18 @@
+[Unit]
+Description=My Java webapplication
+After=cloud-final.service
+
+[Service]
+SuccessExitStatus=143
+WorkingDirectory=/tmp/webservice
+ExecStart=/usr/bin/java -jar /tmp/webservice/SpringBootApplication-0.0.1-SNAPSHOT.jar
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=webservice
+User=ec2-user
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=cloud-init.target
