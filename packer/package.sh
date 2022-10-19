@@ -11,7 +11,7 @@ sudo apt install mysql-server -y
 sudo variable1=$(echo "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'; exit" | sudo mysql)
 pwd
 ls -la
-sudo mv /tmp/SpringBootApplication-0.0.1-SNAPSHOT.jar /bin/SpringBootApplication-0.0.1-SNAPSHOT.jar
+sudo mv /tmp/SpringBootApplication-0.0.1-SNAPSHOT.jar ~/SpringBootApplication-0.0.1-SNAPSHOT.jar
 sudo mv /tmp/webservice.service /etc/systemd/system/webservice.service
 sudo systemctl enable webservice.service
 sudo systemctl start webservice.service
