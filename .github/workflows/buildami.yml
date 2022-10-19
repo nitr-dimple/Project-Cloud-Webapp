@@ -16,7 +16,11 @@ jobs:
       - name: Create webservice folder
         run: rsync -arv --exclude='.git/' --exclude='.github/' --exclude='.gitignore' . ./webservice
 
+      - name: Creating jar for application
+        run: cd SpringBootApplication
+
       - name: switch to webservice folder
         run: cd webservice && ls -la
+
 
 
