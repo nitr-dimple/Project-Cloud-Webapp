@@ -43,6 +43,7 @@ jobs:
   # Build an AMI 
   amibuild:
     runs-on: ubuntu-latest
+    needs: jarcreation
 
     steps:
       - uses: actions/checkout@v2
