@@ -25,7 +25,7 @@ jobs:
         run: cd SpringBootApplication  && mvn clean && mvn package
 
       - name: Check jar file created or not
-        run: ls -la && cd SpringBootApplication && cd target && la -la
+        run: ls -la && cd SpringBootApplication && cd target && ls -la
 
       - name: switch to webservice folder
         run: cd webservice && ls -la
