@@ -14,7 +14,7 @@ sudo variable1=$(echo "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_nativ
 pwd
 ls -la
 sudo mv /tmp/SpringBootApplication-0.0.1-SNAPSHOT.war ~/SpringBootApplication-0.0.1-SNAPSHOT.war
-sudo cp ~/SpringBootApplication-0.0.1-SNAPSHOT.war /var/lib/tomcat9
+sudo cp ~/SpringBootApplication-0.0.1-SNAPSHOT.war /var/lib/tomcat9/webapps
 # sudo mv /tmp/webservice.service /etc/systemd/system/webservice.service
 # sudo systemctl enable webservice.service
 # sudo systemctl start webservice.service
