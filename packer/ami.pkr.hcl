@@ -1,21 +1,21 @@
 variable "aws_region" {
   type    = string
-  default = "us-east-1"
+  default = env("AWS_REGION")
 }
 
 variable "source_ami" {
   type    = string
-  default = "ami-08c40ec9ead489470" # Ubuntu 22.04 LTS
+  default = env("AWS_SOURCE_AMI") # Ubuntu 22.04 LTS
 }
 
 variable "ssh_username" {
   type    = string
-  default = "ubuntu"
+  default = env("AWS_SSH_USERNAME")
 }
 
 variable "subnet_id" {
   type    = string
-  default = "subnet-034b502c9296553f8"
+  default = env("AWS_SUBNET_ID")
 }
 
 variable "aws_access_key_id" {
@@ -33,7 +33,7 @@ variable "aws_secret_key_id" {
 variable "aws_acct_list" {
   type = list(string)
   default = [
-    "121160156171",
+    env("AMI_USERS"),
   ]
 }
 
