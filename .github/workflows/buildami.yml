@@ -46,10 +46,10 @@ jobs:
     needs: jarcreation
 
     steps:
-      - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
           name: webservice
+          
       - name: Display structure of downloaded files
         run: ls -la
 
