@@ -46,12 +46,29 @@ jobs:
     needs: jarcreation
 
     steps:
+      - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
           name: webservice
-          
+
       - name: Display structure of downloaded files
         run: ls -la
+
+      - name: Packer AMI Build
+        uses: hashicorp/packer-github-actions@master
+        with:
+          command: build
+          working_directory: packer
+          target: ami.pkr.hcl
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
+          AWS_SUBNET_ID: ${{ secrets.AWS_SUBNET_ID }}
+          AWS_SSH_USERNAME: ${{ secrets.AWS_SSH_USERNAME }}
+          AMI_USERS: ${{ secrets.AMI_USERS }}
+          AWS_VPC_ID: ${{ secrets.AWS_VPC_ID }}
 
 
 

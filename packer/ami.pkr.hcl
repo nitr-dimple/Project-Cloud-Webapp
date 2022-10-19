@@ -18,6 +18,11 @@ variable "subnet_id" {
   default = env("AWS_SUBNET_ID")
 }
 
+variable "aws_vpc_id" {
+  type    = string
+  default = env("AWS_VPC_ID")
+}
+
 variable "aws_access_key_id" {
   type      = string
   sensitive = true
@@ -45,6 +50,7 @@ source "amazon-ebs" "my-ami" {
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
   ami_users       = "${var.aws_acct_list}"
+  vpc_id          = "${var.aws_vpc_id}"
 
   ami_regions = [
     "us-east-1",
