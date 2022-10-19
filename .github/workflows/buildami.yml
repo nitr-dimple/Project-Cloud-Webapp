@@ -56,7 +56,6 @@ jobs:
 
       - name: Packer AMI Build
         uses: hashicorp/packer-github-actions@master
-        run: ls -la
         with:
           command: build
           working_directory: packer

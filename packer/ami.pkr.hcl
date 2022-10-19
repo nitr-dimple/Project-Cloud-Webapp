@@ -79,12 +79,12 @@ build {
   sources = ["source.amazon-ebs.my-ami"]
 
   provisioner "file" {
-    source      = "SpringBootApplication-0.0.1-SNAPSHOT.jar"
+    source      = "../SpringBootApplication-0.0.1-SNAPSHOT.jar"
     destination = "/tmp/SpringBootApplication-0.0.1-SNAPSHOT.jar"
   }
 
   provisioner "file" {
-    source      = "pakcer/webservice.service"
+    source      = "webservice.service"
     destination = "/tmp/webservice.service"
   }
 
@@ -93,6 +93,6 @@ build {
       "DEBIAN_FRONTEND=noninteractive",
       "CHECKPOINT_DISABLE=1"
     ]
-    script = "./packer/package.sh"
+    script = "./package.sh"
   }
 }
