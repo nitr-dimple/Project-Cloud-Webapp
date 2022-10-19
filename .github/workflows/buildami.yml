@@ -17,6 +17,6 @@ jobs:
         run: rsync -arv --exclude='.git/' --exclude='.github/' --exclude='.gitignore' . ./webservice
 
       - name: switch to webservice folder
-        run: pwd && ls -la 
+        run: cd webservice && ls -la
 
 
