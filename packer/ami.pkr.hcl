@@ -18,6 +18,11 @@ variable "subnet_id" {
   default = env("AWS_SUBNET_ID")
 }
 
+variable "aws_vpc_id" {
+  type    = string
+  default = env("AWS_VPC_ID")
+}
+
 variable "aws_access_key_id" {
   type      = string
   sensitive = true
@@ -45,6 +50,7 @@ source "amazon-ebs" "my-ami" {
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
   ami_users       = "${var.aws_acct_list}"
+  vpc_id          = "${var.aws_vpc_id}"
 
   ami_regions = [
     "us-east-1",
@@ -73,20 +79,20 @@ build {
   sources = ["source.amazon-ebs.my-ami"]
 
   provisioner "file" {
-    source      = "./SpringBootApplication/target/SpringBootApplication-0.0.1-SNAPSHOT.jar"
-    destination = "/tmp/SpringBootApplication-0.0.1-SNAPSHOT.jar"
+    source      = "../SpringBootApplication-0.0.1-SNAPSHOT.war"
+    destination = "/tmp/SpringBootApplication-0.0.1-SNAPSHOT.war"
   }
 
-  provisioner "file" {
-    source      = "pakcer/webservice.service"
-    destination = "/tmp/webservice.service"
-  }
+  // provisioner "file" {
+  //   source      = "webservice.service"
+  //   destination = "/tmp/webservice.service"
+  // }
 
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
       "CHECKPOINT_DISABLE=1"
     ]
-    script = "./packer/package.sh"
+    script = "./package.sh"
   }
 }

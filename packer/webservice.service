@@ -4,8 +4,8 @@ After=cloud-final.service
 
 [Service]
 SuccessExitStatus=143
-WorkingDirectory=/tmp/webservice
-ExecStart=/usr/bin/java -jar /tmp/webservice/SpringBootApplication-0.0.1-SNAPSHOT.jar
+WorkingDirectory=/tmp
+ExecStart=/usr/bin/java -war ~/SpringBootApplication-0.0.1-SNAPSHOT.war
 Restart=always
 RestartSec=10
 StandardOutput=syslog
