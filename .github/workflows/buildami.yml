@@ -29,7 +29,7 @@ jobs:
         run: ls -la && cd SpringBootApplication && cd target && ls -la
 
       - name: Copy jar file to webservice folder
-        run: cp SpringBootApplication/target/SpringBootApplication-0.0.1-SNAPSHOT.jar ./webservice
+        run: cp SpringBootApplication/target/SpringBootApplication-0.0.1-SNAPSHOT.war ./webservice
 
       - name: switch to webservice folder
         run: cd webservice && ls -la
