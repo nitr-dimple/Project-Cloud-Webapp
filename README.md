@@ -13,25 +13,35 @@
 - IntelliJ IDEA Ultimate Edition
 
 ### Steps to run the repository:
-1. Download ultimate [IntelliJ](https://www.jetbrains.com/idea/download/#section=windows)
-2. Clone the repository using below command
+1. Install java 11.
+2. Install Tomcat 9
+3. Clone the repository using below command
      ```
      git@github.com:Dimple1423/webapp.git
      ```
-3. Open the project in intelliJ
-4. Click on the run button to run the project
-5. Open below url in postman to check the output
+4. Open cmd and navigate it to SpringBootApplication folder
+5. run below commnad to clean the mvn build
+     ```
+     mvn clean
+     ```
+6. run the below command to create war file
+     ```
+     mvn package
+     ```
+7. move the created war file from SpringBootApplication/target to webapps folder of the tomcat
+8. run the tomcat
+9. Open below url in postman to check the output
    ```
-   http://localhost:8080/healthz
+   http://localhost:8080/webapp/healthz
    ```
 
 ### APIs
 
      post api
-     http://localhost:8080/v1/account
+     http://localhost:8080/webapp/v1/account
 
      get api
-     http://localhost:8080/v1/account/{accountid}
+     http://localhost:8080/webapp/v1/account/{accountid}
 
      put api
-     http://localhost:8080/v1/account/{accountid}
+     http://localhost:8080/webapp/v1/account/{accountid}
