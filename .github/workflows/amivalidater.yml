@@ -26,8 +26,9 @@ jobs:
           target: ami.pkr.hcl
 
       - name: format check
-        uses: hashicorp/packer-github-actions@master
+        uses: hashicorp/setup-packer@v1
         with:
+          packer_version: 1.6.6
           command: fmt
           working_directory: packer
           target: ami.pkr.hcl
