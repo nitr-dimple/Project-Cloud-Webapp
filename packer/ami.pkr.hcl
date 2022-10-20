@@ -88,6 +88,5 @@ build {
       "DEBIAN_FRONTEND=noninteractive",
       "CHECKPOINT_DISABLE=1"
     ]
-  script = "./package.sh"
-  }
+    script = "./package.sh"
 }
