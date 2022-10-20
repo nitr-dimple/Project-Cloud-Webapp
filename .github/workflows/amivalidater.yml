@@ -26,7 +26,7 @@ jobs:
           target: ami.pkr.hcl
 
       - name: format check
-        run: packer fmt ./packer/ami.pkr.hcl
+        run: ls -la && packer fmt ami.pkr.hcl
         # uses: hashicorp/packer-github-actions@master
         # with:
         #   command: fmt
