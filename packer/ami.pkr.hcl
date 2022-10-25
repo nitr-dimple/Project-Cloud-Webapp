@@ -89,5 +89,5 @@ build {
       "CHECKPOINT_DISABLE=1"
     ]
     script = "./package.sh"
-  
+  }
 }
