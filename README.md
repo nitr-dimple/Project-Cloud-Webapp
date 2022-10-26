@@ -46,3 +46,15 @@
 
      put api
      http://localhost:8080/webapp/v1/account/{accountid}
+
+     post api
+     http://localhost:8080/webapp/v1/documents
+
+     get api
+     http://localhost:8080/webapp/v1/documents
+
+     get api
+     http://localhost:8080/webapp/v1/documents/{doc_id}
+
+     delete api
+     http://localhost:8080/webapp/v1/documents/{doc_id}
