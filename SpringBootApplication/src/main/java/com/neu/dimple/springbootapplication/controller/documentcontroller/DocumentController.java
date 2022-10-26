@@ -102,7 +102,7 @@ public class DocumentController {
         DocumentPersistance savedDocumentDetails = documentRepository.save(documentPersistance);
         logger.log(Level.INFO, "Successfully save document data to database");
 
-        return new ResponseEntity<>(savedDocumentDetails, HttpStatus.OK);
+        return new ResponseEntity<>(savedDocumentDetails, HttpStatus.CREATED);
     }
 
     @GetMapping("")
