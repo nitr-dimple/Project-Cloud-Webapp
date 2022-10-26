@@ -1,5 +1,6 @@
 package com.neu.dimple.springbootapplication.controller.accountcontroller;
 
+import com.neu.dimple.springbootapplication.config.StorageConfig;
 import com.neu.dimple.springbootapplication.persistance.accountpersistance.AccountPersistance;
 import com.neu.dimple.springbootapplication.repository.accountrepository.AccountRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -88,6 +89,8 @@ public class AccountController{
     public ResponseEntity createAccount(@Valid @RequestBody AccountPersistance account){
 
         logger.log(Level.INFO, "Reached: Account Create");
+//        logger.log(Level.INFO, System.getenv("AMI_USERS"));
+
         JSONObject json = new JSONObject();
 
         AccountPersistance accountDetails = accountRepository.findByUsername(account.getUsername());
