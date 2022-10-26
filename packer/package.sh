@@ -10,6 +10,7 @@ sudo apt install maven -y
 # sudo apt install mysql-server -y
 sudo apt install tomcat9 tomcat9-admin -y
 sudo ufw allow from any to any port 8080 proto tcp
+sudo app install mysql-client -y
 # sudo variable1=$(echo "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'; exit" | sudo mysql)
 pwd
 ls -la
