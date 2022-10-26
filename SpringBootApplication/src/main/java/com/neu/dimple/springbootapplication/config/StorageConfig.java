@@ -6,12 +6,9 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.neu.dimple.springbootapplication.controller.accountcontroller.AccountController;
-import org.hibernate.cfg.Environment;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
