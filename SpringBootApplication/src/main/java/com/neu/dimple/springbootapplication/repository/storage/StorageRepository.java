@@ -35,14 +35,16 @@ public class StorageRepository {
 
     public String uploadFile(MultipartFile file, String firstname, String lastname) {
 //        File fileObj = convertMultipartFileToFile(file);
+        String filename = firstname + "_" + lastname + "_" + file.getOriginalFilename() + "_" + System.currentTimeMillis();
+
         try{
             InputStream is=file.getInputStream();
+            s3client.putObject(new PutObjectRequest(bucketName, filename, is,new ObjectMetadata()));
         }catch (IOException e){
             logger.log(Level.INFO, "Error in convertiong inputstream " + e);
         }
 
-        String filename = firstname + "_" + lastname + "_" + file.getOriginalFilename() + "_" + System.currentTimeMillis();
-        s3client.putObject(new PutObjectRequest(bucketName, filename, is,new ObjectMetadata()));
+
 //        fileObj.delete();
         logger.log(Level.INFO, "File: " + filename + " uploaded successfully");
         return filename;
