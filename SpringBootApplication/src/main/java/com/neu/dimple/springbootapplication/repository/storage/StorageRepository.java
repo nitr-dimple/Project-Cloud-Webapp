@@ -1,6 +1,7 @@
 package com.neu.dimple.springbootapplication.repository.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,12 +33,19 @@ public class StorageRepository {
     @Autowired
     private AmazonS3 s3client;
 
-    public String uploadFile(MultipartFile file, String firstname, String lastname){
-        File fileObj = convertMultipartFileToFile(file);
-
+    public String uploadFile(MultipartFile file, String firstname, String lastname) {
+//        File fileObj = convertMultipartFileToFile(file);
         String filename = firstname + "_" + lastname + "_" + file.getOriginalFilename() + "_" + System.currentTimeMillis();
-        s3client.putObject(new PutObjectRequest(bucketName, filename, fileObj));
-        fileObj.delete();
+
+        try{
+            InputStream is=file.getInputStream();
+            s3client.putObject(new PutObjectRequest(bucketName, filename, is,new ObjectMetadata()));
+        }catch (IOException e){
+            logger.log(Level.INFO, "Error in convertiong inputstream " + e);
+        }
+
+
+//        fileObj.delete();
         logger.log(Level.INFO, "File: " + filename + " uploaded successfully");
         return filename;
     }
