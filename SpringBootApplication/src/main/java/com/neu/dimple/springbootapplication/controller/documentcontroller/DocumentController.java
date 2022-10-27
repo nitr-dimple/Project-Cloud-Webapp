@@ -1,5 +1,6 @@
 package com.neu.dimple.springbootapplication.controller.documentcontroller;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.neu.dimple.springbootapplication.controller.accountcontroller.AccountController;
 import com.neu.dimple.springbootapplication.persistance.accountpersistance.AccountPersistance;
 import com.neu.dimple.springbootapplication.persistance.documentpersistance.DocumentPersistance;
@@ -41,6 +42,9 @@ public class DocumentController {
 
     @Autowired
     private final AccountRepository accountRepository;
+
+    @Autowired
+    private AmazonS3 s3client;
 
     private String bucketName = System.getenv("AWS_SBUCKET");
 
@@ -99,7 +103,8 @@ public class DocumentController {
         DocumentPersistance documentPersistance = new DocumentPersistance();
         documentPersistance.setUserId(accountDetails.getId());
         documentPersistance.setName(filename);
-        documentPersistance.setS3_bucket_path(bucketName);
+//        documentPersistance.setS3_bucket_path(bucketName);
+        documentPersistance.setS3_bucket_path(s3client.getUrl(bucketName, filename).toString());
         DocumentPersistance savedDocumentDetails = documentRepository.save(documentPersistance);
         logger.log(Level.INFO, "Successfully save document data to database");
 
