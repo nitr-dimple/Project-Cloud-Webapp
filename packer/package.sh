@@ -14,6 +14,10 @@ sudo apt install mysql-client -y
 # sudo variable1=$(echo "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'; exit" | sudo mysql)
 pwd
 ls -la
+sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 8080
 sudo mv /tmp/SpringBootApplication-0.0.1-SNAPSHOT.war ~/SpringBootApplication-0.0.1-SNAPSHOT.war
 sudo mv ~/SpringBootApplication-0.0.1-SNAPSHOT.war ~/webapp.war
+sudo rm -rf /var/lib/tomcat9/webapps/ROOT
 sudo cp ~/webapp.war /var/lib/tomcat9/webapps
+sudo mv /var/lib/tomcat9/webapps/webapp.war /var/lib/tomcat9/webapps/ROOT.war
+sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 8080
