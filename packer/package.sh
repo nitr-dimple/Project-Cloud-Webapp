@@ -21,5 +21,7 @@ sudo rm -rf /var/lib/tomcat9/webapps/ROOT
 sudo cp ~/webapp.war /var/lib/tomcat9/webapps
 sudo mv /var/lib/tomcat9/webapps/webapp.war /var/lib/tomcat9/webapps/ROOT.war
 sudo iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-ports 8080
-sudo iptables-save -c > /etc/iptables.conf
+sudo touch /etc/iptables.conf
+sudo chmod -R 777 /etc/iptables.conf
+sudo iptables-save > /etc/iptables.conf
 sudo iptables-restore < /etc/iptables.conf
