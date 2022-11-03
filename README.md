@@ -12,7 +12,6 @@
 - Postman
 - IntelliJ IDEA Ultimate Edition
 
-
 ### Steps to run the repository:
 1. Install java 11.
 2. Install Tomcat 9
