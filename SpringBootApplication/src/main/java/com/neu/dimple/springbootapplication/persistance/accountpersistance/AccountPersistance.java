@@ -132,4 +132,15 @@ public class AccountPersistance {
     public void setAccount_updated(Date account_updated) {
         this.account_updated = account_updated;
     }
+
+    @Override
+    public String toString(){
+        String obj = "{ id: " + this.getId() +
+                "\n firstname: " + this.getFirstname() +
+                "\n lastname: " + this.getLastname() +
+                "\n username: " + this.getUsername() +
+                "\n account_created: " + this.getAccount_created() +
+                "\n account_updated: " + this.getAccount_updated() + "\n }";
+        return obj;
+    }
 }
