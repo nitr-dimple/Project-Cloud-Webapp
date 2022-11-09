@@ -88,6 +88,11 @@ build {
     destination = "/tmp/amazon-cloudwatch-agent.json"
   }
 
+  provisioner "file" {
+    source      = "../packer/iptable.service"
+    destination = "/tmp/iptable.service"
+  }
+
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
