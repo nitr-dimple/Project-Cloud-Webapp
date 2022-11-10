@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Date;
 
 @RestController
 public class HealthCheckController {
 
     private static StatsdClient statsDClient;
+    private static StatsDClient statsdClient = new NonBlockingStatsDClient("", "localhost", 8125);
+
 
     static {
         try {
@@ -34,7 +37,8 @@ public class HealthCheckController {
     @ResponseStatus(code = HttpStatus.OK)
     public void healthCheck(){
         logger.info("Reached: GET /healthz");
-        statsDClient.increment("endpoint.http.getHealthz");
+        statsdClient.recordExecutionTime("", new Date().getTime());
+        statsdClient.increment("endpoint.http.getHealthz");
         return;
     }
 }
