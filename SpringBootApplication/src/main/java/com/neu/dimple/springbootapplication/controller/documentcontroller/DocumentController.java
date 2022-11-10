@@ -61,7 +61,7 @@ public class DocumentController {
     public ResponseEntity<DocumentPersistance> uploadDocument(@RequestParam(value="file")MultipartFile file, @RequestHeader Map<String, String> headers) {
 
         logger.info("Reached: POST /v1/documents ");
-        statsDClient.incrementCounter("endpoint.http.postDocument");
+        statsDClient.increment("endpoint.http.postDocument");
 
         JSONObject json = new JSONObject();
         String authorization = null;
@@ -126,7 +126,7 @@ public class DocumentController {
     @GetMapping("")
     public ResponseEntity getAllDocuments(@RequestHeader Map<String, String> headers){
         logger.info("Reached: GET /v1/documents ");
-        statsDClient.incrementCounter("endpoint.http.getAllDocument");
+        statsDClient.increment("endpoint.http.getAllDocument");
 
         JSONObject json = new JSONObject();
         String authorization = null;
@@ -180,7 +180,7 @@ public class DocumentController {
     public ResponseEntity getAllDocuments(@PathVariable(value = "doc_id") UUID id, @RequestHeader Map<String, String> headers){
 
         logger.info("Reached: GET /v1/documents/" + id);
-        statsDClient.incrementCounter("endpoint.http.getDocument");
+        statsDClient.increment("endpoint.http.getDocument");
 
         JSONObject json = new JSONObject();
         String authorization = null;
@@ -241,8 +241,8 @@ public class DocumentController {
     @DeleteMapping("/{doc_id}")
     public ResponseEntity deleteFile(@PathVariable(value = "doc_id") UUID id, @RequestHeader Map<String, String> headers){
         logger.info("Reached: DELETE /v1/documents/" + id);
-        statsDClient.incrementCounter("endpoint.http.deleteDocument");
-        
+        statsDClient.increment("endpoint.http.deleteDocument");
+
         JSONObject json = new JSONObject();
         String authorization = null;
 
