@@ -1,6 +1,7 @@
 package com.neu.dimple.springbootapplication.controller.documentcontroller;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.neu.dimple.springbootapplication.config.StatsdClient;
 import com.neu.dimple.springbootapplication.controller.accountcontroller.AccountController;
 import com.neu.dimple.springbootapplication.persistance.accountpersistance.AccountPersistance;
 import com.neu.dimple.springbootapplication.persistance.documentpersistance.DocumentPersistance;
@@ -22,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -48,7 +50,17 @@ public class DocumentController {
     private AmazonS3 s3client;
 
     Logger logger = LoggerFactory.getLogger(DocumentController.class);
-    private static StatsDClient statsDClient = new NonBlockingStatsDClient("", "localhost", 8125);
+//    private static StatsDClient statsDClient = new NonBlockingStatsDClient("", "localhost", 8125);
+
+    private static StatsdClient statsDClient;
+
+    static {
+        try {
+            statsDClient = new StatsdClient("localhost", 8125);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private String bucketName = System.getenv("AWS_SBUCKET");
 
     public DocumentController(StorageRepository storageRepository, DocumentRepository documentRepository, AccountRepository accountRepository) {

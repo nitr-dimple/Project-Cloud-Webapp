@@ -1,5 +1,6 @@
 package com.neu.dimple.springbootapplication.controller.accountcontroller;
 
+import com.neu.dimple.springbootapplication.config.StatsdClient;
 import com.neu.dimple.springbootapplication.config.StorageConfig;
 import com.neu.dimple.springbootapplication.persistance.accountpersistance.AccountPersistance;
 import com.neu.dimple.springbootapplication.repository.accountrepository.AccountRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -37,8 +39,16 @@ public class AccountController{
     private final AccountRepository accountRepository;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private static StatsDClient statsDClient = new NonBlockingStatsDClient("", "localhost", 8125);
+//    private static StatsDClient statsDClient = new NonBlockingStatsDClient("", "localhost", 8125);
+    private static StatsdClient statsDClient;
 
+    static {
+        try {
+            statsDClient = new StatsdClient("localhost", 8125);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     Logger logger = LoggerFactory.getLogger(AccountController.class);
     public AccountController(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
