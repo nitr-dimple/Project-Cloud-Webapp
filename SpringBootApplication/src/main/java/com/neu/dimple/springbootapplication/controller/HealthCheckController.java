@@ -22,7 +22,7 @@ public class HealthCheckController {
     @ResponseStatus(code = HttpStatus.OK)
     public void healthCheck(){
         logger.info("Reached: GET /healthz");
-        statsDClient.incrementCounter("endpoint.http.getHealthz");
+        statsDClient.increment("endpoint.http.getHealthz");
         return;
     }
 }
