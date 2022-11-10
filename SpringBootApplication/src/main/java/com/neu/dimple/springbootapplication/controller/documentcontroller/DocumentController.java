@@ -82,14 +82,14 @@ public class DocumentController {
             authorization = headers.get("authorization");
         else{
             json.put("error", "Missing Authorization Header ");
-            logger.info("Missing Authorization Header ");
+            logger.error("Missing Authorization Header ");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         if(pair.split(":").length < 2){
             json.put("error", "Username and Password can not be empty");
-            logger.info("Username and Password can not be empty");
+            logger.error("Username and Password can not be empty");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
@@ -102,19 +102,19 @@ public class DocumentController {
 
         if(accountDetails == null){
             json.put("error", "Username does not exist");
-            logger.info("Username does not exist");
+            logger.error("Username does not exist");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(!BCrypt.checkpw(password, accountDetails.getPassword())) {
             json.put("error", "Password is incorrect");
-            logger.info("Password is incorrect");
+            logger.error("Password is incorrect");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
         if(file.isEmpty()){
             json.put("error", "Please attach file");
-            logger.info("Please attach file");
+            logger.error("Please attach file");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
@@ -147,14 +147,14 @@ public class DocumentController {
             authorization = headers.get("authorization");
         else{
             json.put("error", "Missing Authorization Header ");
-            logger.info("Missing Authorization Header ");
+            logger.error("Missing Authorization Header ");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         if(pair.split(":").length < 2){
             json.put("error", "Username and Password can not be empty");
-            logger.info("Username and Password can not be empty");
+            logger.error("Username and Password can not be empty");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
@@ -167,13 +167,13 @@ public class DocumentController {
 
         if(accountDetails == null){
             json.put("error", "Username does not exist");
-            logger.info("Username does not exist");
+            logger.error("Username does not exist");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(!BCrypt.checkpw(password, accountDetails.getPassword())) {
             json.put("error", "Password is incorrect");
-            logger.info("Password is incorrect");
+            logger.error("Password is incorrect");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
@@ -201,14 +201,14 @@ public class DocumentController {
             authorization = headers.get("authorization");
         else{
             json.put("error", "Missing Authorization Header ");
-            logger.info("Missing Authorization Header");
+            logger.error("Missing Authorization Header");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         if(pair.split(":").length < 2){
             json.put("error", "Username and Password can not be empty");
-            logger.info("Username and Password can not be empty");
+            logger.error("Username and Password can not be empty");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
@@ -221,13 +221,13 @@ public class DocumentController {
 
         if(accountDetails == null){
             json.put("error", "Username does not exist");
-            logger.info("Username does not exist");
+            logger.error("Username does not exist");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(!BCrypt.checkpw(password, accountDetails.getPassword())) {
             json.put("error", "Password is incorrect");
-            logger.info("Password is incorrect");
+            logger.error("Password is incorrect");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
@@ -235,13 +235,13 @@ public class DocumentController {
 
         if(documentPersistance == null){
             json.put("error", "Please Enter Valid Document ID");
-            logger.info("Please Enter Valid Document ID");
+            logger.error("Please Enter Valid Document ID");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(!documentPersistance.getUserId().equals(accountDetails.getId())){
             json.put("error", "You are not authorized to access this document");
-            logger.info("You are not authorized to access this document");
+            logger.error("You are not authorized to access this document");
             return new ResponseEntity(json, HttpStatus.FORBIDDEN);
         }
 
@@ -262,14 +262,14 @@ public class DocumentController {
             authorization = headers.get("authorization");
         else{
             json.put("error", "Missing Authorization Header ");
-            logger.info("Missing Authorization Header");
+            logger.error("Missing Authorization Header");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         if(pair.split(":").length < 2){
             json.put("error", "Username and Password can not be empty");
-            logger.info("Username and Password can not be empty");
+            logger.error("Username and Password can not be empty");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
@@ -282,13 +282,13 @@ public class DocumentController {
 
         if(accountDetails == null){
             json.put("error", "Username does not exist");
-            logger.info("Username does not exist");
+            logger.error("Username does not exist");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(!BCrypt.checkpw(password, accountDetails.getPassword())) {
             json.put("error", "Password is incorrect");
-            logger.info("Password is incorrect");
+            logger.error("Password is incorrect");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
@@ -299,13 +299,13 @@ public class DocumentController {
 
         if(documentPersistance == null){
             json.put("error", "Please Enter Valid Document ID");
-            logger.info("Please Enter Valid Document ID");
+            logger.error("Please Enter Valid Document ID");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(!documentPersistance.getUserId().equals(accountDetails.getId())){
             json.put("error", "You are not authorized to delete this document");
-            logger.info("You are not authorized to delete this document");
+            logger.error("You are not authorized to delete this document");
             return new ResponseEntity(json, HttpStatus.FORBIDDEN);
         }
 

@@ -149,14 +149,14 @@ public class AccountController{
         }
         else{
             json.put("error", "Missing Authorization Header ");
-            logger.info("Missing Authorization Header");
+            logger.error("Missing Authorization Header");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         if(pair.split(":").length < 2){
             json.put("error", "Username and Password can not be empty");
-            logger.info("Username and Password can not be empty");
+            logger.error("Username and Password can not be empty");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
         String username=pair.split(":")[0];
@@ -167,56 +167,56 @@ public class AccountController{
 
         if(authorization == null){
             json.put("error", "Missing Authorization Header ");
-            logger.info("Missing Authorization Header");
+            logger.error("Missing Authorization Header");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
         if(accountDetails == null){
             json.put("error", "User ID not valid");
-            logger.info("User ID not valid");
+            logger.error("User ID not valid");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(!accountDetails.getUsername().equals(username)){
             json.put("error", "You are not authorized to updated");
-            logger.info("You are not authorized to updated");
+            logger.error("You are not authorized to updated");
             return new ResponseEntity(json, HttpStatus.FORBIDDEN);
         }
 
         if(!BCrypt.checkpw(password, accountDetails.getPassword())  || !accountDetails.getUsername().equals(username))
         {
             json.put("error", "User is not Authorized");
-            logger.info("User is not Authorized");
+            logger.error("User is not Authorized");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
         if( account.getUsername() != null){
             json.put("error", "You can not update username");
-            logger.info("You can not update username");
+            logger.error("You can not update username");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(account.getId() != null){
             json.put("error", "Id can not be updated");
-            logger.info("Id can not be updated");
+            logger.error("Id can not be updated");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(account.getAccount_created() != null){
             json.put("error", "Can not set account create time");
-            logger.info("Can not set account create time");
+            logger.error("Can not set account create time");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(account.getAccount_updated() != null){
             json.put("error", "Can not set account update time");
-            logger.info("Can not set account update time");
+            logger.error("Can not set account update time");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
         if(account.getPassword() != null && account.getPassword().isEmpty()){
             json.put("error", "Password can not be empty");
-            logger.info("Password can not be empty");
+            logger.error("Password can not be empty");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
         }
 
