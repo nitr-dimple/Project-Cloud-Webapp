@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <File> C:/Users/antiy/csye6225.log</File>
+        <File> logs/csye6225.log</File>
         <encoder>
             <pattern>%m%n</pattern>
         </encoder>
