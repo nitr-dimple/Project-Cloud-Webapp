@@ -7,6 +7,8 @@ import com.neu.dimple.springbootapplication.persistance.documentpersistance.Docu
 import com.neu.dimple.springbootapplication.repository.accountrepository.AccountRepository;
 import com.neu.dimple.springbootapplication.repository.documentrepository.DocumentRepository;
 import com.neu.dimple.springbootapplication.repository.storage.StorageRepository;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -20,7 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -47,6 +48,7 @@ public class DocumentController {
     private AmazonS3 s3client;
 
     Logger logger = LoggerFactory.getLogger(DocumentController.class);
+    private static StatsDClient statsDClient = new NonBlockingStatsDClient("", "localhost", 8125);
     private String bucketName = System.getenv("AWS_SBUCKET");
 
     public DocumentController(StorageRepository storageRepository, DocumentRepository documentRepository, AccountRepository accountRepository) {
@@ -58,7 +60,8 @@ public class DocumentController {
     @PostMapping("")
     public ResponseEntity<DocumentPersistance> uploadDocument(@RequestParam(value="file")MultipartFile file, @RequestHeader Map<String, String> headers) {
 
-        logger.info("Reached: Document Upload ");
+        logger.info("Reached: POST /v1/documents ");
+        statsDClient.incrementCounter("endpoint.http.postDocument");
 
         JSONObject json = new JSONObject();
         String authorization = null;
@@ -122,7 +125,8 @@ public class DocumentController {
 
     @GetMapping("")
     public ResponseEntity getAllDocuments(@RequestHeader Map<String, String> headers){
-        logger.info("Reached: GetAllDocuments ");
+        logger.info("Reached: GET /v1/documents ");
+        statsDClient.incrementCounter("endpoint.http.getAllDocument");
 
         JSONObject json = new JSONObject();
         String authorization = null;
@@ -174,7 +178,9 @@ public class DocumentController {
 
     @GetMapping("/{doc_id}")
     public ResponseEntity getAllDocuments(@PathVariable(value = "doc_id") UUID id, @RequestHeader Map<String, String> headers){
-        logger.info("Reached: GetDocument id: " + id);
+
+        logger.info("Reached: GET /v1/documents/" + id);
+        statsDClient.incrementCounter("endpoint.http.getDocument");
 
         JSONObject json = new JSONObject();
         String authorization = null;
@@ -234,8 +240,9 @@ public class DocumentController {
 
     @DeleteMapping("/{doc_id}")
     public ResponseEntity deleteFile(@PathVariable(value = "doc_id") UUID id, @RequestHeader Map<String, String> headers){
-        logger.info("Reached: deleteDocuments " + id);
-
+        logger.info("Reached: DELETE /v1/documents/" + id);
+        statsDClient.incrementCounter("endpoint.http.deleteDocument");
+        
         JSONObject json = new JSONObject();
         String authorization = null;
 

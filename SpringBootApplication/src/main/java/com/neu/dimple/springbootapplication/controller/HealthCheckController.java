@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthCheckController {
 
-    private StatsDClient statsDClient = new NonBlockingStatsDClient("", "localhost", 8125);
+    private static StatsDClient statsDClient = new NonBlockingStatsDClient("", "localhost", 8125);
     Logger logger = LoggerFactory.getLogger(HealthCheckController.class);
 
 

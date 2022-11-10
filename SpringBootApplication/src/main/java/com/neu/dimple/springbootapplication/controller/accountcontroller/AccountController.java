@@ -3,6 +3,8 @@ package com.neu.dimple.springbootapplication.controller.accountcontroller;
 import com.neu.dimple.springbootapplication.config.StorageConfig;
 import com.neu.dimple.springbootapplication.persistance.accountpersistance.AccountPersistance;
 import com.neu.dimple.springbootapplication.repository.accountrepository.AccountRepository;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.hibernate.validator.internal.util.logging.Log;
 import org.json.simple.JSONObject;
@@ -35,6 +37,8 @@ public class AccountController{
     private final AccountRepository accountRepository;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private static StatsDClient statsDClient = new NonBlockingStatsDClient("", "localhost", 8125);
+
     Logger logger = LoggerFactory.getLogger(AccountController.class);
     public AccountController(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -43,7 +47,8 @@ public class AccountController{
     @GetMapping("/{accountId}")
     public ResponseEntity<AccountPersistance> getAllUserAccount(@PathVariable(value = "accountId") UUID id, @RequestHeader Map<String, String> headers){
 //        logger.log(Level.INFO, "Reached: Account Get Call");
-        logger.info("Reached: Account Get Call");
+        logger.info("Reached: GET /v1/account/" + id);
+        statsDClient.incrementCounter("endpoint.http.getAccount");
 
         JSONObject json = new JSONObject();
         String authorization = null;
@@ -99,7 +104,8 @@ public class AccountController{
     public ResponseEntity createAccount(@Valid @RequestBody AccountPersistance account){
 
 //        logger.log(Level.INFO, "Reached: Account Create");
-        logger.info("Reached: Account Create " + account);
+        logger.info("Reached: POST /v1/account  " + account);
+        statsDClient.incrementCounter("endpoint.http.postAccount");
 
         JSONObject json = new JSONObject();
 
@@ -121,7 +127,8 @@ public class AccountController{
     public ResponseEntity<AccountPersistance> updateAccount(@PathVariable(value = "accountId") UUID id, @RequestBody AccountPersistance account, @RequestHeader Map<String, String> headers){
 //        logger.log(Level.INFO, "Reached: Account Put call");
 
-        logger.info("Reached: Account Put call");
+        logger.info("Reached: PUT /v1/account/" + id);
+        statsDClient.incrementCounter("endpoint.http.putAccount");
 
         JSONObject json = new JSONObject();
         String authorization = null;
