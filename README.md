@@ -57,3 +57,4 @@
 
      delete api
      http://localhost:8080/webapp/v1/documents/{doc_id}
+     
