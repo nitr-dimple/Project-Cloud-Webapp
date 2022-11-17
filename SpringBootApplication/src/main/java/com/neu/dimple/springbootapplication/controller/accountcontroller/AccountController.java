@@ -129,6 +129,11 @@ public class AccountController{
             return new ResponseEntity(json, HttpStatus.FORBIDDEN);
         }
 
+        if(accountDetails.isVerifiedUser() == false) {
+            json.put("error", "User is not verified, Please verify your account");
+            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
+        }
+
         if(!BCrypt.checkpw(password, accountDetails.getPassword()) || !accountDetails.getUsername().equals(username)) {
             json.put("error", "User is not Authorized");
             logger.error("User is not Authorized");
