@@ -163,7 +163,7 @@ public class AccountController{
         try {
 
             long now = Instant.now().getEpochSecond();
-            long ttl = 60*2;
+            long ttl = 60*10;
 
             userEmailToken.setEmail(account.getUsername());
             userEmailToken.setExpiration_time(ttl + now);
@@ -217,6 +217,7 @@ public class AccountController{
                 .stringValue(userEmailToken.getToken())
                 .build());
 
+        logger.info("token " + userEmailToken.getToken() );
 
         try{
             logger.info(awsEmailTopicArn);
