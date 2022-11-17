@@ -112,6 +112,12 @@ public class DocumentController {
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
+
+        if(accountDetails.isVerifiedUser() == false) {
+            json.put("error", "User is not verified, Please verify your account");
+            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
+        }
+
         if(file.isEmpty()){
             json.put("error", "Please attach file");
             logger.error("Please attach file");
@@ -177,6 +183,11 @@ public class DocumentController {
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
+        if(accountDetails.isVerifiedUser() == false) {
+            json.put("error", "User is not verified, Please verify your account");
+            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
+        }
+
         logger.info("Fetching all Documents for user: " + username);
         List<DocumentPersistance> documentRepositories = documentRepository.findByUserId(accountDetails.getId());
 
@@ -228,6 +239,12 @@ public class DocumentController {
         if(!BCrypt.checkpw(password, accountDetails.getPassword())) {
             json.put("error", "Password is incorrect");
             logger.error("Password is incorrect");
+            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
+        }
+
+
+        if(accountDetails.isVerifiedUser() == false) {
+            json.put("error", "User is not verified, Please verify your account");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
@@ -289,6 +306,12 @@ public class DocumentController {
         if(!BCrypt.checkpw(password, accountDetails.getPassword())) {
             json.put("error", "Password is incorrect");
             logger.error("Password is incorrect");
+            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
+        }
+
+
+        if(accountDetails.isVerifiedUser() == false) {
+            json.put("error", "User is not verified, Please verify your account");
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 

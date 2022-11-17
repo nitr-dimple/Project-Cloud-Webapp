@@ -57,6 +57,10 @@ public class AccountPersistance {
     @UpdateTimestamp
     @Column(name="account_update")
     private Date account_updated;
+
+
+    @Column(name="verified_user")
+    private boolean verifiedUser;
     public AccountPersistance() {
     }
 
@@ -68,6 +72,7 @@ public class AccountPersistance {
         this.password = password;
         this.account_created = account_created;
         this.account_updated = account_updated;
+        this.verifiedUser = verifiedUser;
     }
 
     public AccountPersistance(String firstname, String lastname, String username, String password) {
@@ -133,6 +138,14 @@ public class AccountPersistance {
         this.account_updated = account_updated;
     }
 
+    public boolean isVerifiedUser() {
+        return verifiedUser;
+    }
+
+    public void setVerifiedUser(boolean verifiedUser) {
+        this.verifiedUser = verifiedUser;
+    }
+
     @Override
     public String toString(){
         String obj = "{ id: " + this.getId() +
@@ -140,7 +153,8 @@ public class AccountPersistance {
                 "\n lastname: " + this.getLastname() +
                 "\n username: " + this.getUsername() +
                 "\n account_created: " + this.getAccount_created() +
-                "\n account_updated: " + this.getAccount_updated() + "\n }";
+                "\n account_updated: " + this.getAccount_updated() +
+                "\n verified_user: "+this.isVerifiedUser() + "\n }";
         return obj;
     }
 }
