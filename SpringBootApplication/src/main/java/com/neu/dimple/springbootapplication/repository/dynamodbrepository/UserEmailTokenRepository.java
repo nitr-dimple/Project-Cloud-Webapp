@@ -17,8 +17,8 @@ public class UserEmailTokenRepository {
         this.dynamoDBMapper = dynamoDBMapper;
     }
 
-    public UserEmailToken getOneTimeToken(String token) {
-        return dynamoDBMapper.load(UserEmailToken.class, token);
+    public UserEmailToken getUserEmailToken(String email, String token) {
+        return dynamoDBMapper.load(UserEmailToken.class, email, token);
     }
 
     public UserEmailToken createOneTimeToken(UserEmailToken oneTimeToken) {

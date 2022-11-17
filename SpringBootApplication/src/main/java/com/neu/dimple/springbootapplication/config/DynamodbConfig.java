@@ -22,10 +22,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DynamodbConfig {
 
-    @Value("${AWS_ACCESS_KEY_ID_DEMO}")
+    @Value("${AWS_ACCESS_KEY_ID}")
     private String awsAccessKey;
 
-    @Value("${AWS_SECRET_KEY_ID_DEMO}")
+    @Value("${AWS_SECRET_KEY_ID}")
     private String awsSecretKey;
 
     @Bean

@@ -2,6 +2,24 @@ package com.neu.dimple.springbootapplication.controller.accountcontroller;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.auth.AWSCredentials;
+//import com.amazonaws.auth.AWSCredentialsProvider;
+//import com.amazonaws.auth.AWSStaticCredentialsProvider;
+//import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+//import com.amazonaws.services.sns.AmazonSNS;
+//import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+//import com.amazonaws.services.sns.model.PublishRequest;
+//import com.amazonaws.services.sns.model.PublishResult;
+//import com.amazonaws.services.sns.AmazonSNS;
+//import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import software.amazon.awssdk.auth.credentials.*;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.sns.SnsClient;
+import software.amazon.awssdk.services.sns.model.MessageAttributeValue;
+import software.amazon.awssdk.services.sns.model.PublishRequest;
+import software.amazon.awssdk.services.sns.model.PublishResponse;
+import software.amazon.awssdk.services.sns.model.SnsException;
 import com.neu.dimple.springbootapplication.config.StatsdClient;
 import com.neu.dimple.springbootapplication.persistance.accountpersistance.AccountPersistance;
 import com.neu.dimple.springbootapplication.persistance.dynamodbpersistance.UserEmailToken;
@@ -24,6 +42,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -43,8 +62,12 @@ public class AccountController{
     private final UserEmailTokenRepository userEmailTokenRepository;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//    private static StatsDClient statsDClient = new NonBlockingStatsDClient("", "localhost", 8125);
     private static StatsdClient statsDClient;
+    private String accessKey = System.getenv("AWS_ACCESS_KEY_ID");
+    private String accessSecreteKey = System.getenv("AWS_SECRET_KEY_ID");
+    private String awsRegion = System.getenv("AWS_REGION");
+    private String awsEmailTopicArn = System.getenv("EMAIL_TOPIC_ARN");
+    private String domainName = System.getenv("DOMAIN_NAME");
 
     static {
         try {
@@ -118,7 +141,6 @@ public class AccountController{
     @PostMapping("")
     public ResponseEntity createAccount(@Valid @RequestBody AccountPersistance account){
 
-//        logger.log(Level.INFO, "Reached: Account Create");
         logger.info("Reached: POST /v1/account  " + account);
         statsDClient.increment("endpoint.http.postAccount");
 
@@ -132,12 +154,17 @@ public class AccountController{
         }
         String password = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt(10));
         account.setPassword(password);
+        AccountPersistance savedAccount = accountRepository.save(account);
+        logger.info("Successfully Saved Data: " + savedAccount);
+        UserEmailToken userEmailToken = new UserEmailToken();
 
         try {
-            UserEmailToken userEmailToken = new UserEmailToken();
+
+            long now = Instant.now().getEpochSecond();
+            long ttl = 60*2;
 
             userEmailToken.setEmail(account.getUsername());
-            userEmailToken.setExpiration_time(0);
+            userEmailToken.setExpiration_time(ttl + now);
             logger.info("OneTImeToken before save: " + userEmailToken);
             userEmailToken = userEmailTokenRepository.createOneTimeToken(userEmailToken);
 
@@ -149,9 +176,59 @@ public class AccountController{
         catch (AmazonClientException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
+        logger.info("Sending an email for verification...");
+//        AWSCredentials credentials = new BasicAWSCredentials(accessKey, accessSecreteKey);
 
-        AccountPersistance savedAccount = accountRepository.save(account);
-        logger.info("Successfully Saved Data: " + savedAccount);
+//        AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
+
+
+        logger.info("Generating sns client...");
+        SnsClient snsClient = SnsClient.builder()
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, accessSecreteKey)))
+                .region(Region.US_EAST_1)
+                .build();
+
+        HashMap<String, MessageAttributeValue> map = new HashMap<>();
+
+        map.put("emailId", MessageAttributeValue.builder()
+                        .dataType("String")
+                        .stringValue(savedAccount.getUsername())
+                        .build());
+        map.put("firstName", MessageAttributeValue.builder()
+                        .dataType("String")
+                        .stringValue(savedAccount.getFirstname())
+                        .build());
+        map.put("domainName", MessageAttributeValue.builder()
+                        .dataType("String")
+                        .stringValue(domainName)
+                        .build());
+        map.put("expirationTime", MessageAttributeValue.builder()
+                        .dataType("String")
+                        .stringValue(Long.toString(userEmailToken.getExpiration_time()))
+                        .build());
+
+
+        try{
+            logger.info(awsEmailTopicArn);
+            logger.info("Creating publisher object...");
+            PublishRequest requestEmail = PublishRequest.builder()
+                    .subject("Verification Email")
+                    .message("Click on link")
+                    .messageAttributes(map)
+                    .topicArn(awsEmailTopicArn)
+                    .build();
+
+            logger.info("Publishing an event...");
+            PublishResponse publishResponse = snsClient.publish(requestEmail);
+            logger.info("Successfully sent an email");
+        }catch (SnsException e) {
+            logger.error(e.awsErrorDetails().errorMessage());
+            System.exit(1);
+        }
+
+//        PublishRequest publishRequest = new PublishRequest(awsEmailTopicArn,snsObject);
+
+//        PublishResult publishResponse = snsClient.publish(publishRequest);
 
         return new ResponseEntity(savedAccount, HttpStatus.OK);
     }
