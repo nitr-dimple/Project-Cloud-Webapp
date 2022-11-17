@@ -1,18 +1,17 @@
 package com.neu.dimple.springbootapplication.controller.accountcontroller;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
 import com.neu.dimple.springbootapplication.config.StatsdClient;
-import com.neu.dimple.springbootapplication.config.StorageConfig;
 import com.neu.dimple.springbootapplication.persistance.accountpersistance.AccountPersistance;
+import com.neu.dimple.springbootapplication.persistance.dynamodbpersistance.UserEmailToken;
 import com.neu.dimple.springbootapplication.repository.accountrepository.AccountRepository;
-import com.timgroup.statsd.NonBlockingStatsDClient;
-import com.timgroup.statsd.StatsDClient;
+import com.neu.dimple.springbootapplication.repository.dynamodbrepository.UserEmailTokenRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.hibernate.validator.internal.util.logging.Log;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -20,9 +19,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,6 +39,9 @@ public class AccountController{
     @Autowired
     private final AccountRepository accountRepository;
 
+    @Autowired
+    private final UserEmailTokenRepository userEmailTokenRepository;
+
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //    private static StatsDClient statsDClient = new NonBlockingStatsDClient("", "localhost", 8125);
     private static StatsdClient statsDClient;
@@ -50,8 +54,9 @@ public class AccountController{
         }
     }
     Logger logger = LoggerFactory.getLogger(AccountController.class);
-    public AccountController(AccountRepository accountRepository) {
+    public AccountController(AccountRepository accountRepository, UserEmailTokenRepository userEmailTokenRepository) {
         this.accountRepository = accountRepository;
+        this.userEmailTokenRepository = userEmailTokenRepository;
     }
 
     @GetMapping("/{accountId}")
@@ -127,6 +132,24 @@ public class AccountController{
         }
         String password = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt(10));
         account.setPassword(password);
+
+        try {
+            UserEmailToken userEmailToken = new UserEmailToken();
+
+            userEmailToken.setEmail(account.getUsername());
+            userEmailToken.setExpiration_time(0);
+            logger.info("OneTImeToken before save: " + userEmailToken);
+            userEmailToken = userEmailTokenRepository.createOneTimeToken(userEmailToken);
+
+            logger.info("Successfully Saved OneTimeToken: " + userEmailToken);
+        }
+        catch (AmazonServiceException e) {
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }
+        catch (AmazonClientException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+
         AccountPersistance savedAccount = accountRepository.save(account);
         logger.info("Successfully Saved Data: " + savedAccount);
 
