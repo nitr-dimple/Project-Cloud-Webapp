@@ -212,6 +212,10 @@ public class AccountController{
                         .dataType("String")
                         .stringValue(sendgridKey)
                         .build());
+        map.put("token", MessageAttributeValue.builder()
+                .dataType("String")
+                .stringValue(userEmailToken.getToken())
+                .build());
 
 
         try{
