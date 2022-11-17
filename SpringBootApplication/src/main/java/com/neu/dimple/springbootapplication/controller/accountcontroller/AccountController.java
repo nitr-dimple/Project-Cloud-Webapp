@@ -69,6 +69,8 @@ public class AccountController{
     private String awsEmailTopicArn = System.getenv("EMAIL_TOPIC_ARN");
     private String domainName = System.getenv("DOMAIN_NAME");
 
+    private String sendgridKey = System.getenv("SENDGRID_KEY");
+
     static {
         try {
             statsDClient = new StatsdClient("localhost", 8125);
@@ -206,6 +208,10 @@ public class AccountController{
                         .dataType("String")
                         .stringValue(Long.toString(userEmailToken.getExpiration_time()))
                         .build());
+        map.put("sendgridKey", MessageAttributeValue.builder()
+                        .dataType("String")
+                        .stringValue(sendgridKey)
+                        .build());
 
 
         try{
@@ -253,6 +259,7 @@ public class AccountController{
             return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
+
         String pair=new String(Base64.decodeBase64(authorization.substring(6)));
         if(pair.split(":").length < 2){
             json.put("error", "Username and Password can not be empty");
@@ -275,6 +282,12 @@ public class AccountController{
             json.put("error", "User ID not valid");
             logger.error("User ID not valid");
             return new ResponseEntity(json, HttpStatus.BAD_REQUEST);
+        }
+
+
+        if(accountDetails.isVerifiedUser() == false) {
+            json.put("error", "User is not verified, Please verify your account");
+            return new ResponseEntity(json, HttpStatus.UNAUTHORIZED);
         }
 
         if(!accountDetails.getUsername().equals(username)){
