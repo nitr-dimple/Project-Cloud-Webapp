@@ -254,7 +254,7 @@ public class AccountController{
         JSONObject json = new JSONObject();
         String authorization = null;
 
-        if(headers.containsKey("autrization")){
+        if(headers.containsKey("authorization")){
             authorization = headers.get("authorization");
             logger.info("Authorization Method Used: " + authorization.split(" ")[0]);
         }
