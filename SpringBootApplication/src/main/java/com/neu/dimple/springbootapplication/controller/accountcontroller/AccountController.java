@@ -163,7 +163,7 @@ public class AccountController{
         try {
 
             long now = Instant.now().getEpochSecond();
-            long ttl = 60*10;
+            long ttl = 60*5;
 
             userEmailToken.setEmail(account.getUsername());
             userEmailToken.setExpiration_time(ttl + now);
