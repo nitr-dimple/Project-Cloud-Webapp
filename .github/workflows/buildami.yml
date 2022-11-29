@@ -73,6 +73,12 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -la && ls -la ./packer
 
+      - name: Display manifest file
+        run: cat ./packer/manifest.json
+
+      - name: Extract ami id
+        run: AMI_ID=$(jq -r '.builds[-1].artifact_id' ./packer/manifest.json | cut -d ":" -f2) && echo $AMI_ID
+
 
 
 
