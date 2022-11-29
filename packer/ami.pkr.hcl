@@ -100,11 +100,11 @@ build {
     ]
     script = "./package.sh"
   }
-
-  "post-processors": [
-    {
-        output = "manifest.json"
-        strip_path =  true
-    }
-  ]  
 }
+
+"post-processors": [
+  {
+      output = "manifest.json"
+      strip_path =  true
+  }
+]  
