@@ -35,7 +35,6 @@
    ```
    http://localhost:8080/webapp/healthz
    ```
-
 ### APIs
 
      post api
