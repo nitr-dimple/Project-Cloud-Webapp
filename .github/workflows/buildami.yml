@@ -70,6 +70,8 @@ jobs:
           AMI_USERS: ${{ secrets.AMI_USERS }}
           AWS_VPC_ID: ${{ secrets.AWS_VPC_ID }}
         
+      - name: Display structure of downloaded files
+        run: ls -la && ls -la ./packer
 
 
 
