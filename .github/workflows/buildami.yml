@@ -69,7 +69,8 @@ jobs:
           AWS_SSH_USERNAME: ${{ secrets.AWS_SSH_USERNAME }}
           AMI_USERS: ${{ secrets.AMI_USERS }}
           AWS_VPC_ID: ${{ secrets.AWS_VPC_ID }}
-          LAUNCH_TEMPLATE_NAME: asg_launch_config
+          LAUNCH_TEMPLATE_NAME: ${{ secrets.LAUNCH_TEMPLATE_NAME }}
+          AUTOSCALING_GROUP_NAME: ${{ secrets.AUTOSCALING_GROUP_NAME }}
         
       - name: Display structure of downloaded files
         run: ls -la && ls -la ./packer
@@ -90,9 +91,20 @@ jobs:
 
       - name: Creating new version for Launch Templates
         run: |
-          aws ec2 create-launch-template-version --launch-template-name asg_launch_config \
+          aws ec2 create-launch-template-version --launch-template-name ${{ env.LAUNCH_TEMPLATE_NAME }} \
           --source-version '$Latest' \
           --launch-template-data '{"ImageId":"${{ env.AMI_ID }}"}'
+
+      - name: Sleep for 60 seconds
+        run: sleep 60s
+
+      - name: run autoscaling refresh 
+        run: |
+           aws --profile dev autoscaling start-instance-refresh \
+           --auto-scaling-group-name ${{ env.AUTOSCALING_GROUP_NAME }} \
+           --strategy Rolling --desired-configuration \
+           '{"LaunchTemplate": {"LaunchTemplateName":"${{ env.LAUNCH_TEMPLATE_NAME }}", "Version":"$Latest"}}
+          
 
 
 
