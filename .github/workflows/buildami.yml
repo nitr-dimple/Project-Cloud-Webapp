@@ -69,6 +69,7 @@ jobs:
           AWS_SSH_USERNAME: ${{ secrets.AWS_SSH_USERNAME }}
           AMI_USERS: ${{ secrets.AMI_USERS }}
           AWS_VPC_ID: ${{ secrets.AWS_VPC_ID }}
+          LAUNCH_TEMPLATE_NAME: asg_launch_config
         
       - name: Display structure of downloaded files
         run: ls -la && ls -la ./packer
@@ -78,6 +79,21 @@ jobs:
 
       - name: Extract ami id
         run: AMI_ID=$(jq -r '.builds[-1].artifact_id' ./packer/manifest.json | cut -d ":" -f2) && echo $AMI_ID
+
+      - name: Configuring AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Creating new version for Launch Templates
+        run: |
+          aws ec2 create-launch-template --launch-template-name ${{ env.LAUNCH_TEMPLATE_NAME}} \
+          --launch-template-id ${{ env.LAUNCH_TEMPLATE_ID }} lt-08260b30038cadaa7 \
+          --source-version Default \
+          --launch-template-data '{"ImageId":"$AMI_ID"}'
+
 
 
 
