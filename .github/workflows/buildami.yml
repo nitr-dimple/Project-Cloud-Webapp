@@ -78,7 +78,8 @@ jobs:
         run: cat ./packer/manifest.json
 
       - name: Extract ami id
-        run: AMI_ID=$(jq -r '.builds[-1].artifact_id' ./packer/manifest.json | cut -d ":" -f2) && echo $AMI_ID
+        run: |
+          echo "AMI_ID=$(jq -r '.builds[-1].artifact_id' ./packer/manifest.json | cut -d ":" -f2)" >> $GITHUB_ENV
 
       - name: Configuring AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -91,7 +92,7 @@ jobs:
         run: |
           aws ec2 create-launch-template-version --launch-template-name asg_launch_config \
           --source-version '$Latest' \
-          --launch-template-data '{"ImageId":"$AMI_ID"}'
+          --launch-template-data '{"ImageId":"${{ env.AMI_ID }}"}'
 
 
 
