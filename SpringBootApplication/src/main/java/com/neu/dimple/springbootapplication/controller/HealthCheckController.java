@@ -30,7 +30,7 @@ public class HealthCheckController {
     Logger logger = LoggerFactory.getLogger(HealthCheckController.class);
 
 
-    @RequestMapping("/health")
+    @RequestMapping("/healthz")
     @ResponseStatus(code = HttpStatus.OK)
     public void healthCheck(){
         logger.info("Reached: GET /healthz");
