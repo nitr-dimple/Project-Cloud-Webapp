@@ -90,8 +90,7 @@ jobs:
       - name: Creating new version for Launch Templates
         run: |
           aws ec2 create-launch-template-version --launch-template-name ${{ env.LAUNCH_TEMPLATE_NAME}} \
-          --launch-template-id lt-08260b30038cadaa7 \
-          --source-version Default \
+          --source-version '$Latest' \
           --launch-template-data '{"ImageId":"$AMI_ID"}'
 
 
