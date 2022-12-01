@@ -85,8 +85,8 @@ jobs:
       - name: Configuring AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEMO }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID_DEMO }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Creating new version for Launch Templates
@@ -100,10 +100,7 @@ jobs:
 
       - name: run autoscaling refresh 
         run: |
-           aws --profile dev autoscaling start-instance-refresh \
-           --auto-scaling-group-name mystack1-asg \
-           --strategy Rolling --desired-configuration \
-           '{"LaunchTemplate": {"LaunchTemplateName":"${{ secrets.LAUNCH_TEMPLATE_NAME }}", "Version":"$Latest"}}'
+           aws autoscaling start-instance-refresh --auto-scaling-group-name mystack1-asg --strategy Rolling --desired-configuration '{"LaunchTemplate": {"LaunchTemplateName":"${{ secrets.LAUNCH_TEMPLATE_NAME }}", "Version":"$Latest"}}'
           
 
 
